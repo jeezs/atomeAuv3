@@ -40,7 +40,6 @@
 		349603E42818619000E13C15 /* atome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = atome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		349603FF281861B500E13C15 /* atomeau.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = atomeau.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		34960426281861EE00E13C15 /* view */ = {isa = PBXFileReference; lastKnownFileType = folder; path = view; sourceTree = "<group>"; };
-		6B864DCC2D5DDE54006DEA72 /* readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -88,7 +87,6 @@
 		349603DB2818618F00E13C15 = {
 			isa = PBXGroup;
 			children = (
-				6B864DCC2D5DDE54006DEA72 /* readme.txt */,
 				6B6B458B2D537B7800706498 /* Common */,
 				34960426281861EE00E13C15 /* view */,
 				6B864DBD2D5DDA74006DEA72 /* application */,

@@ -36,16 +36,6 @@ public class auv3Utils: AUAudioUnit {
                                               busses: [try AUAudioUnitBus(format: format)])
     }
 
-//    public override var internalRenderBlock: AUInternalRenderBlock {
-//        return { [weak self] actionFlags, timestamp, frameCount, outputBusNumber, outputData, realtimeEventListHead, pullInputBlock in
-//            guard let self = self else { return noErr }
-//
-//            self.checkHostTransport()
-//            self.checkHostTempo()  // Ajout de la vérification du tempo
-//
-//            return noErr
-//        }
-//    }
     
     public override var internalRenderBlock: AUInternalRenderBlock {
         return { actionFlags, timestamp, frameCount, outputBusNumber, outputData, realtimeEventListHead, pullInputBlock in
@@ -71,6 +61,8 @@ public class auv3Utils: AUAudioUnit {
                 let outBuffer = outputData.pointee.mBuffers
                 memcpy(outBuffer.mData, inBuffer.mData, Int(inBuffer.mDataByteSize))
             }
+                        self.checkHostTransport()
+                        self.checkHostTempo()  // Ajout de la vérification du tempo
 
             return noErr
         }
