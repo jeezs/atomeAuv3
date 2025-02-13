@@ -61,6 +61,7 @@ public class auv3Utils: AUAudioUnit {
                 let outBuffer = outputData.pointee.mBuffers
                 memcpy(outBuffer.mData, inBuffer.mData, Int(inBuffer.mDataByteSize))
             }
+            
                         self.checkHostTransport()
                         self.checkHostTempo()  // Ajout de la vérification du tempo
 

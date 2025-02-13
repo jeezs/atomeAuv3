@@ -47,5 +47,63 @@
 <body>
     <h1>Web view initialized</h1>
 </body>
+<script>
+    // Redefined console.log
+    window.console.log=(function(oldLog){
+        return function(message){
+            oldLog(message)
+            try{window.webkit.messageHandlers.console.postMessage("LOG: "+message)}
+            catch(e){oldLog()}
+        }
+    })(window.console.log)
 
+    window.console.error=(function(oldErr){
+        return function(message){
+            oldErr(message)
+            try{window.webkit.messageHandlers.console.postMessage("ERROR: "+message)}
+            catch(e){oldErr()}
+        }
+    })(window.console.error)
+// comunication with swift
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("DOM fully loaded and parsed");
+
+function sendToSwift(message, type = "log") {
+    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.swiftBridge) {
+        try {
+            let payload = {
+                type: type,
+                data: message
+            };
+            window.webkit.messageHandlers.swiftBridge.postMessage(payload);
+        } catch (error) {
+            console.error("Error sending message to Swift:", error);
+        }
+    } else {
+        console.warn("Swift bridge is not available.");
+    }
+}
+
+// verifications
+
+sendToSwift("Hello from JavaScript");
+sendToSwift({ user: "atome", action: "login" }, "saveData");
+sendToSwift([1, 2, 3, 4], "performCalculation");
+sendToSwift("An error occurred", "error");
+    });
+    
+    function creerDivRouge(val) {
+        console.log(val);
+
+      const newDiv = document.createElement('div');
+      
+      newDiv.style.width = '100px';
+      newDiv.style.height = '100px';
+      newDiv.style.backgroundColor = 'red';
+      newDiv.style.margin = '10px';
+      document.body.appendChild(newDiv);
+    }
+
+</script>
 </html>
