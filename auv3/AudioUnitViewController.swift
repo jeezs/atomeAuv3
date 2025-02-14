@@ -23,6 +23,9 @@ public class AudioUnitViewController: AUViewController, AUAudioUnitFactory {
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(webView)
         WebViewManager.setupWebView(for: webView)
+        
+        //      audio routing
+                    setupAudioRouting() // Ajoutez cette ligne
     }
 
     public func createAudioUnit(with componentDescription: AudioComponentDescription) throws -> AUAudioUnit {

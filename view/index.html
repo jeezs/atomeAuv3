@@ -46,6 +46,11 @@
 
 <body>
     <h1>Web view initialized</h1>
+    <div class="visualizer-container">
+         <canvas id="waveformCanvas" width="600" height="200"></canvas>
+     </div>
+    <div id="debugInfo">Waiting for audio data...</div>
+
 </body>
 <script>
     // Redefined console.log
@@ -106,4 +111,243 @@ sendToSwift("An error occurred", "error");
     }
 
 </script>
+<script>
+
+    // Audio processing functions
+    // Add this to your index.html script section
+
+    // Audio handling globals
+    let audioContext = null;
+    let audioBuffer = [];
+    const BUFFER_SIZE = 4096;
+
+    // Initialize audio context safely
+    function initAudioContext() {
+        try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioContext = new AudioContext();
+            console.log('Audio context initialized successfully');
+        } catch (error) {
+            console.error('Failed to initialize audio context:', error);
+        }
+    }
+
+    // Process incoming audio data from Swift
+    function processAudioData(samples) {
+        if (!Array.isArray(samples)) {
+            console.error('Received invalid audio data');
+            return;
+        }
+
+        // Store samples in buffer
+        audioBuffer = audioBuffer.concat(samples);
+
+        // Process buffer when it reaches sufficient size
+        while (audioBuffer.length >= BUFFER_SIZE) {
+            const bufferedData = audioBuffer.slice(0, BUFFER_SIZE);
+            audioBuffer = audioBuffer.slice(BUFFER_SIZE);
+
+            // Process the audio data
+            processAudioBuffer(bufferedData);
+        }
+    }
+
+    // Process a complete buffer of audio data
+    function processAudioBuffer(buffer) {
+        try {
+            // Here you can add any audio processing you need
+            // For example, analyzing volume, frequency, etc.
+            
+            // Send processed audio back to Swift
+            sendAudioToSwift(buffer);
+        } catch (error) {
+            console.error('Error processing audio buffer:', error);
+        }
+    }
+
+    // Send audio data to Swift
+    function sendAudioToSwift(samples) {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.audiobridge) {
+            try {
+                window.webkit.messageHandlers.audiobridge.postMessage({
+                    type: 'audio',
+                    data: Array.from(samples) // Ensure we're sending a clean array
+                });
+            } catch (error) {
+                console.error('Error sending audio to Swift:', error);
+            }
+        }
+    }
+
+    // Add visualization if needed
+    function visualizeAudio(samples) {
+        // Add your visualization code here
+        // For example, using Canvas to draw waveforms
+    }
+
+    // Initialize when document is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Initializing audio system...');
+        initAudioContext();
+    });
+
+    // Optional: Add basic error handling for the audio context
+    window.addEventListener('error', function(e) {
+        console.error('Audio system error:', e.message);
+    });
+    </script>
+<script>
+       // Console logging setup
+       window.console.log=(function(oldLog){
+           return function(message){
+               oldLog(message)
+               try{window.webkit.messageHandlers.console.postMessage("LOG: "+message)}
+               catch(e){oldLog()}
+           }
+       })(window.console.log)
+
+       window.console.error=(function(oldErr){
+           return function(message){
+               oldErr(message)
+               try{window.webkit.messageHandlers.console.postMessage("ERROR: "+message)}
+               catch(e){oldErr()}
+           }
+       })(window.console.error)
+
+       // Debug function
+       function updateDebugInfo(message) {
+           const debugDiv = document.getElementById('debugInfo');
+           debugDiv.innerHTML += "<br>" + message;
+           console.log(message);
+       }
+
+       class WaveformVisualizer {
+           constructor(canvasId) {
+               this.canvas = document.getElementById(canvasId);
+               if (!this.canvas) {
+                   updateDebugInfo("ERROR: Canvas not found!");
+                   return;
+               }
+               
+               this.ctx = this.canvas.getContext('2d');
+               this.dataArray = [];
+               this.maxDataPoints = 1000;
+               
+               this.backgroundColor = '#f0f0f0';
+               this.waveColor = '#2196F3';
+               this.lineWidth = 2;
+               
+               updateDebugInfo("Visualizer initialized");
+               
+               // Draw initial state
+               this.drawTestPattern();
+           }
+           
+           drawTestPattern() {
+               // Dessiner un motif de test pour vérifier que le canvas fonctionne
+               this.ctx.fillStyle = this.backgroundColor;
+               this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+               
+               // Dessiner une croix
+               this.ctx.beginPath();
+               this.ctx.strokeStyle = 'red';
+               this.ctx.lineWidth = 2;
+               this.ctx.moveTo(0, 0);
+               this.ctx.lineTo(this.canvas.width, this.canvas.height);
+               this.ctx.moveTo(this.canvas.width, 0);
+               this.ctx.lineTo(0, this.canvas.height);
+               this.ctx.stroke();
+               
+               updateDebugInfo("Test pattern drawn");
+           }
+           
+           update(newSamples) {
+               updateDebugInfo(`Updating with ${newSamples.length} samples`);
+               
+               this.dataArray = [...this.dataArray, ...newSamples];
+               if (this.dataArray.length > this.maxDataPoints) {
+                   this.dataArray = this.dataArray.slice(-this.maxDataPoints);
+               }
+               
+               this.draw();
+           }
+           
+           draw() {
+               this.ctx.fillStyle = this.backgroundColor;
+               this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+               
+               const width = this.canvas.width;
+               const height = this.canvas.height;
+               const middleY = height / 2;
+               
+               this.ctx.beginPath();
+               this.ctx.strokeStyle = this.waveColor;
+               this.ctx.lineWidth = this.lineWidth;
+               
+               const step = width / this.maxDataPoints;
+               
+               this.dataArray.forEach((value, index) => {
+                   const x = index * step;
+                   const y = middleY + (value * middleY);
+                   
+                   if (index === 0) {
+                       this.ctx.moveTo(x, y);
+                   } else {
+                       this.ctx.lineTo(x, y);
+                   }
+               });
+               
+               this.ctx.stroke();
+               updateDebugInfo("Waveform drawn");
+           }
+       }
+
+       let visualizer;
+
+       // Initialisation avec test immédiat
+       document.addEventListener('DOMContentLoaded', () => {
+           updateDebugInfo('DOM loaded, initializing visualizer...');
+           visualizer = new WaveformVisualizer('waveformCanvas');
+           
+           // Générer quelques données de test immédiatement
+           generateTestData();
+       });
+
+       function generateTestData() {
+           updateDebugInfo('Generating test data...');
+           const testData = [];
+           for (let i = 0; i < 100; i++) {
+               testData.push(Math.sin(i * 0.1) * 0.5);
+           }
+           processAudioData(testData);
+       }
+
+       function processAudioData(samples) {
+           if (!Array.isArray(samples)) {
+               updateDebugInfo('ERROR: Invalid audio data received');
+               return;
+           }
+
+           updateDebugInfo(`Processing ${samples.length} samples`);
+           
+           const normalizedSamples = samples.map(sample => {
+               return sample / 32768.0;
+           });
+
+           if (visualizer) {
+               visualizer.update(normalizedSamples);
+           } else {
+               updateDebugInfo('ERROR: Visualizer not initialized');
+           }
+       }
+
+       // Test périodique
+       function runPeriodicTest() {
+           generateTestData();
+           setTimeout(runPeriodicTest, 1000); // Générer de nouvelles données chaque seconde
+       }
+
+       // Démarrer le test périodique
+       setTimeout(runPeriodicTest, 1000);
+   </script>
 </html>

@@ -153,4 +153,5 @@ class WebViewManager: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
     private func handleError(message: String) {
         print("Erreur reçue: \(message)")
     }
+
 }

@@ -53,6 +53,7 @@
 		6B864DCB2D5DDDD7006DEA72 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AudioProcessor.swift,
 				AudioUnitViewController.swift,
 				utils.swift,
 			);
