@@ -135,12 +135,17 @@ class WebViewManager: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
         }
     }
 
+ 
+    
+    // For tests only
+    
+    
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("Page web chargée avec succès")
         WebViewManager.sendToJS("test", "creerDivRouge")
     }
     
-    // For tests only
+    
     private func handleUserAction(user: String, action: String) {
    
     }
@@ -149,8 +154,11 @@ class WebViewManager: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
         print("Calcul avec les nombres: \(numbers)")
 
     }
+
     
-    private func handleError(message: String) {
+    public func handleError(message: String) {
         print("Erreur reçue: \(message)")
     }
+    
+
 }

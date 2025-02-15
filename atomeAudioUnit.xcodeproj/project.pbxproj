@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		34960420281861B500E13C15 /* atomeau.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 349603FF281861B500E13C15 /* atomeau.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34960420281861B500E13C15 /* atomeAudioUnitau.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 349603FF281861B500E13C15 /* atomeAudioUnitau.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		34960427281861EE00E13C15 /* view in Resources */ = {isa = PBXBuildFile; fileRef = 34960426281861EE00E13C15 /* view */; };
 		34960428281861EE00E13C15 /* view in Resources */ = {isa = PBXBuildFile; fileRef = 34960426281861EE00E13C15 /* view */; };
 /* End PBXBuildFile section */
@@ -29,7 +29,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				34960420281861B500E13C15 /* atomeau.appex in Embed Foundation Extensions */,
+				34960420281861B500E13C15 /* atomeAudioUnitau.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -37,8 +37,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		349603E42818619000E13C15 /* atome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = atome.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		349603FF281861B500E13C15 /* atomeau.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = atomeau.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		349603E42818619000E13C15 /* atomeAudioUnit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = atomeAudioUnit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		349603FF281861B500E13C15 /* atomeAudioUnitau.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = atomeAudioUnitau.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		34960426281861EE00E13C15 /* view */ = {isa = PBXFileReference; lastKnownFileType = folder; path = view; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -48,7 +48,7 @@
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 349603E32818619000E13C15 /* atome */;
+			target = 349603E32818619000E13C15 /* atomeAudioUnit */;
 		};
 		6B864DCB2D5DDDD7006DEA72 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -56,7 +56,7 @@
 				AudioUnitViewController.swift,
 				utils.swift,
 			);
-			target = 349603FE281861B500E13C15 /* atomeau */;
+			target = 349603FE281861B500E13C15 /* atomeAudioUnitau */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -98,8 +98,8 @@
 		349603E52818619000E13C15 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				349603E42818619000E13C15 /* atome.app */,
-				349603FF281861B500E13C15 /* atomeau.appex */,
+				349603E42818619000E13C15 /* atomeAudioUnit.app */,
+				349603FF281861B500E13C15 /* atomeAudioUnitau.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,9 +107,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		349603E32818619000E13C15 /* atome */ = {
+		349603E32818619000E13C15 /* atomeAudioUnit */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 349603F82818619200E13C15 /* Build configuration list for PBXNativeTarget "atome" */;
+			buildConfigurationList = 349603F82818619200E13C15 /* Build configuration list for PBXNativeTarget "atomeAudioUnit" */;
 			buildPhases = (
 				349603E02818619000E13C15 /* Sources */,
 				349603E12818619000E13C15 /* Frameworks */,
@@ -125,14 +125,14 @@
 				6B6B458B2D537B7800706498 /* Common */,
 				6B864DBD2D5DDA74006DEA72 /* application */,
 			);
-			name = atome;
+			name = atomeAudioUnit;
 			productName = webview;
-			productReference = 349603E42818619000E13C15 /* atome.app */;
+			productReference = 349603E42818619000E13C15 /* atomeAudioUnit.app */;
 			productType = "com.apple.product-type.application";
 		};
-		349603FE281861B500E13C15 /* atomeau */ = {
+		349603FE281861B500E13C15 /* atomeAudioUnitau */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 34960421281861B500E13C15 /* Build configuration list for PBXNativeTarget "atomeau" */;
+			buildConfigurationList = 34960421281861B500E13C15 /* Build configuration list for PBXNativeTarget "atomeAudioUnitau" */;
 			buildPhases = (
 				349603FB281861B500E13C15 /* Sources */,
 				349603FC281861B500E13C15 /* Frameworks */,
@@ -145,9 +145,9 @@
 			fileSystemSynchronizedGroups = (
 				6B6B458B2D537B7800706498 /* Common */,
 			);
-			name = atomeau;
+			name = atomeAudioUnitau;
 			productName = webviewauv3;
-			productReference = 349603FF281861B500E13C15 /* atomeau.appex */;
+			productReference = 349603FF281861B500E13C15 /* atomeAudioUnitau.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -168,7 +168,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 349603DF2818618F00E13C15 /* Build configuration list for PBXProject "atome" */;
+			buildConfigurationList = 349603DF2818618F00E13C15 /* Build configuration list for PBXProject "atomeAudioUnit" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -181,8 +181,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				349603E32818619000E13C15 /* atome */,
-				349603FE281861B500E13C15 /* atomeau */,
+				349603E32818619000E13C15 /* atomeAudioUnit */,
+				349603FE281861B500E13C15 /* atomeAudioUnitau */,
 			);
 		};
 /* End PBXProject section */
@@ -226,7 +226,7 @@
 /* Begin PBXTargetDependency section */
 		3496041F281861B500E13C15 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 349603FE281861B500E13C15 /* atomeau */;
+			target = 349603FE281861B500E13C15 /* atomeAudioUnitau */;
 			targetProxy = 3496041E281861B500E13C15 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -493,7 +493,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		349603DF2818618F00E13C15 /* Build configuration list for PBXProject "atome" */ = {
+		349603DF2818618F00E13C15 /* Build configuration list for PBXProject "atomeAudioUnit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				349603F62818619200E13C15 /* Debug */,
@@ -502,7 +502,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		349603F82818619200E13C15 /* Build configuration list for PBXNativeTarget "atome" */ = {
+		349603F82818619200E13C15 /* Build configuration list for PBXNativeTarget "atomeAudioUnit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				349603F92818619200E13C15 /* Debug */,
@@ -511,7 +511,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		34960421281861B500E13C15 /* Build configuration list for PBXNativeTarget "atomeau" */ = {
+		34960421281861B500E13C15 /* Build configuration list for PBXNativeTarget "atomeAudioUnitau" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				34960422281861B500E13C15 /* Debug */,

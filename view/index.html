@@ -65,25 +65,24 @@
         }
     })(window.console.error)
 // comunication with swift
-    
     document.addEventListener("DOMContentLoaded", function() {
-        console.log("DOM fully loaded and parsed");
+       // console.log("DOM fully loaded and parsed");
 
-function sendToSwift(message, type = "log") {
-    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.swiftBridge) {
-        try {
-            let payload = {
-                type: type,
-                data: message
-            };
-            window.webkit.messageHandlers.swiftBridge.postMessage(payload);
-        } catch (error) {
-            console.error("Error sending message to Swift:", error);
-        }
-    } else {
-        console.warn("Swift bridge is not available.");
-    }
-}
+        window.sendToSwift = function(message, type = "log") {
+            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.swiftBridge) {
+                try {
+                    let payload = {
+                        type: type,
+                        data: message
+                    };
+                    window.webkit.messageHandlers.swiftBridge.postMessage(payload);
+                } catch (error) {
+                    console.error("Error sending message to Swift:", error);
+                }
+            } else {
+                console.warn("Swift bridge is not available.");
+            }
+        };
 
 // verifications
 
@@ -96,14 +95,31 @@ sendToSwift("An error occurred", "error");
     function creerDivRouge(val) {
         console.log(val);
 
-      const newDiv = document.createElement('div');
-      
-      newDiv.style.width = '100px';
-      newDiv.style.height = '100px';
-      newDiv.style.backgroundColor = 'red';
-      newDiv.style.margin = '10px';
-      document.body.appendChild(newDiv);
-    }
+        const newDiv = document.createElement('div');
 
-</script>
+        newDiv.style.width = '100px';
+        newDiv.style.height = '100px';
+        newDiv.style.backgroundColor = 'red';
+        newDiv.style.margin = '10px';
+
+        newDiv.addEventListener('click', function() {
+
+           if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.swiftBridge) {
+               sendToSwift("div rouge touched!!");
+           } else {
+               console.error("Swift bridge not available");
+           }
+           sendToSwift([9, 6, 3, 0], "performCalculation");
+        });
+
+        document.body.appendChild(newDiv);
+    }
+    
+    
+    setTimeout(function() {
+        console.log("hello from JS !");
+    }, 2000);
+
+    </script>
+
 </html>

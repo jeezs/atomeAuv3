@@ -1,69 +1,64 @@
-////
-////  utils.swift
-////  atome
-////
-////  Created by jeezs on 26/04/2022.
-////
-
-
 import AVFoundation
+import Foundation
 
 public class auv3Utils: AUAudioUnit {
     private var _outputBusArray: AUAudioUnitBusArray!
     private var _inputBusArray: AUAudioUnitBusArray!
-
-    override public var inputBusses: AUAudioUnitBusArray {
-        return _inputBusArray
-    }
-
-    override public var outputBusses: AUAudioUnitBusArray {
-        return _outputBusArray
-    }
-
-    public override init(componentDescription: AudioComponentDescription,
-                         options: AudioComponentInstantiationOptions = []) throws {
-        try super.init(componentDescription: componentDescription, options: options)
-
-        // Create the audio bus arrays
-        let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)!
-
-        _inputBusArray = AUAudioUnitBusArray(audioUnit: self,
-                                             busType: .input,
-                                             busses: [try AUAudioUnitBus(format: format)])
-
-        _outputBusArray = AUAudioUnitBusArray(audioUnit: self,
-                                              busType: .output,
-                                              busses: [try AUAudioUnitBus(format: format)])
-    }
-
+    private var isMuted: Bool = false
+    private var audioLogger: FileHandle?
+    private var isLogging: Bool = false
     
+    // essential function for rendering
     public override var internalRenderBlock: AUInternalRenderBlock {
-        return { actionFlags, timestamp, frameCount, outputBusNumber, outputData, realtimeEventListHead, pullInputBlock in
-
+        return { [weak self] actionFlags, timestamp, frameCount, outputBusNumber, outputData, realtimeEventListHead, pullInputBlock in
+            guard let strongSelf = self else { return kAudioUnitErr_NoConnection }
             guard let pullInputBlock = pullInputBlock else {
                 return kAudioUnitErr_NoConnection
             }
 
             var inputTimestamp = AudioTimeStamp()
-            let inputBusNumber: Int = 0 // Utilisation d'un entier simple
+            let inputBusNumber: Int = 0
 
-            // Récupération des données audio d'entrée
             let inputStatus = pullInputBlock(actionFlags, &inputTimestamp, frameCount, inputBusNumber, outputData)
 
             if inputStatus != noErr {
                 return inputStatus
             }
 
-            // Copie du buffer d'entrée vers la sortie
-            let numBuffers = Int(outputData.pointee.mNumberBuffers)
-            for _ in 0..<numBuffers {
-                let inBuffer = outputData.pointee.mBuffers // Utilisation correcte
-                let outBuffer = outputData.pointee.mBuffers
-                memcpy(outBuffer.mData, inBuffer.mData, Int(inBuffer.mDataByteSize))
+            // Log audio data if logging is enabled
+            if strongSelf.isLogging, let logger = strongSelf.audioLogger {
+                let numBuffers = Int(outputData.pointee.mNumberBuffers)
+                for bufferIndex in 0..<numBuffers {
+                    let inBuffer = UnsafeMutableAudioBufferListPointer(outputData)[bufferIndex]
+                    if let inData = inBuffer.mData {
+                        let data = Data(bytes: inData, count: Int(inBuffer.mDataByteSize))
+                        try? logger.write(contentsOf: data)
+                    }
+                }
+            }
+
+            // Handle muting
+            if strongSelf.isMuted {
+                let numBuffers = Int(outputData.pointee.mNumberBuffers)
+                for bufferIndex in 0..<numBuffers {
+                    let outBuffer = UnsafeMutableAudioBufferListPointer(outputData)[bufferIndex]
+                    if let mData = outBuffer.mData {
+                        memset(mData, 0, Int(outBuffer.mDataByteSize))
+                    }
+                }
+            } else {
+                let numBuffers = Int(outputData.pointee.mNumberBuffers)
+                for bufferIndex in 0..<numBuffers {
+                    let inBuffer = UnsafeMutableAudioBufferListPointer(outputData)[bufferIndex]
+                    let outBuffer = UnsafeMutableAudioBufferListPointer(outputData)[bufferIndex]
+                    if let inData = inBuffer.mData, let outData = outBuffer.mData {
+                        memcpy(outData, inData, Int(inBuffer.mDataByteSize))
+                    }
+                }
             }
             
-                        self.checkHostTransport()
-                        self.checkHostTempo()  // Ajout de la vérification du tempo
+            strongSelf.checkHostTransport()
+            strongSelf.checkHostTempo()
 
             return noErr
         }
@@ -77,7 +72,76 @@ public class auv3Utils: AUAudioUnit {
             super.musicalContextBlock = newValue
         }
     }
+    
 
+    // Add mute  utilities
+    public var mute: Bool {
+        get { return isMuted }
+        set { isMuted = newValue }
+    }
+
+    
+    // Add logging control
+    public var logging: Bool {
+        get { return isLogging }
+        set {
+            if newValue != isLogging {
+                if newValue {
+                    startLogging()
+                } else {
+                    stopLogging()
+                }
+                isLogging = newValue
+            }
+        }
+    }
+    
+    private func startLogging() {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        let timestamp = dateFormatter.string(from: Date())
+        let logPath = documentsPath.appendingPathComponent("audio_log_\(timestamp).raw")
+        
+        FileManager.default.createFile(atPath: logPath.path, contents: nil)
+        audioLogger = try? FileHandle(forWritingTo: logPath)
+        
+        print("Started audio logging to: \(logPath.path)")
+    }
+    
+    private func stopLogging() {
+        audioLogger?.closeFile()
+        audioLogger = nil
+        print("Stopped audio logging")
+    }
+    
+    // busses handling
+        override public var inputBusses: AUAudioUnitBusArray {
+            return _inputBusArray
+        }
+
+        override public var outputBusses: AUAudioUnitBusArray {
+            return _outputBusArray
+        }
+
+    public override init(componentDescription: AudioComponentDescription,
+                         options: AudioComponentInstantiationOptions = []) throws {
+        try super.init(componentDescription: componentDescription, options: options)
+
+        let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)!
+
+        _inputBusArray = AUAudioUnitBusArray(audioUnit: self,
+                                             busType: .input,
+                                             busses: [try AUAudioUnitBus(format: format)])
+
+        _outputBusArray = AUAudioUnitBusArray(audioUnit: self,
+                                              busType: .output,
+                                              busses: [try AUAudioUnitBus(format: format)])
+    }
+
+
+
+    // utility to report some host events
     private func checkHostTransport() {
         if let transportStateBlock = self.transportStateBlock {
             var transportStateChanged = AUHostTransportStateFlags(rawValue: 0)
@@ -106,8 +170,6 @@ public class auv3Utils: AUAudioUnit {
         }
     }
   
-    
-    
     private func checkHostTempo() {
         guard let contextBlock = self.musicalContextBlock else {
             print("No musical context block available")
@@ -132,15 +194,13 @@ public class auv3Utils: AUAudioUnit {
 
         if success {
             if timeSignatureValid != 0 {
-                print("Tempo: \(tempo) BPM") // Correction ici
-                print("Time Signature: \(Int(timeSignatureNumerator))/\(Int(timeSignatureDenominator))") // Correction ici
+                print("Tempo: \(tempo) BPM")
+                print("Time Signature: \(Int(timeSignatureNumerator))/\(Int(timeSignatureDenominator))")
                 print("Beat Position: \(currentBeatPosition)")
             }
         }
     }
-
     
-    // Sample rate retrieval method
     func getSampleRate() -> Double? {
         guard outputBusses.count > 0 else {
             print("No output busses available")
