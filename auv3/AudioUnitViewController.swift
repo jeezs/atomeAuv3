@@ -7,8 +7,9 @@
 
 import CoreAudioKit
 import WebKit
+import Common
 
-public class AudioUnitViewController: AUViewController, AUAudioUnitFactory {
+public class AudioUnitViewController: AUViewController {
     var audioUnit: AUAudioUnit?
     @IBOutlet var webView: WKWebView!
     
@@ -22,7 +23,7 @@ public class AudioUnitViewController: AUViewController, AUAudioUnitFactory {
         webView = WKWebView(frame: view.bounds, configuration: config)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(webView)
-        WebViewManager.setupWebView(for: webView)
+        Common.WebViewManager.setupWebView(for: webView)
     }
 
     public func createAudioUnit(with componentDescription: AudioComponentDescription) throws -> AUAudioUnit {

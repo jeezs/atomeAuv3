@@ -17,9 +17,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "349603FE281861B500E13C15"
-               BuildableName = "atomeAudioUnitau.appex"
-               BlueprintName = "atomeAudioUnitau"
-               ReferencedContainer = "container:atomeAudioUnit.xcodeproj">
+               BuildableName = "atomeAudioUnit.appex"
+               BlueprintName = "atomeAudioUnit"
+               ReferencedContainer = "container:atome.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,9 +31,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "349603E32818619000E13C15"
-               BuildableName = "atomeAudioUnit.app"
-               BlueprintName = "atomeAudioUnit"
-               ReferencedContainer = "container:atomeAudioUnit.xcodeproj">
+               BuildableName = "atome.app"
+               BlueprintName = "atome"
+               ReferencedContainer = "container:atome.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -49,7 +49,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
-      launchStyle = "1"
+      launchStyle = "0"
       askForAppToLaunch = "Yes"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "349603E32818619000E13C15"
-            BuildableName = "atomeAudioUnit.app"
-            BlueprintName = "atomeAudioUnit"
-            ReferencedContainer = "container:atomeAudioUnit.xcodeproj">
+            BuildableName = "atome.app"
+            BlueprintName = "atome"
+            ReferencedContainer = "container:atome.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -85,9 +85,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "349603E32818619000E13C15"
-            BuildableName = "atomeAudioUnit.app"
-            BlueprintName = "atomeAudioUnit"
-            ReferencedContainer = "container:atomeAudioUnit.xcodeproj">
+            BuildableName = "atome.app"
+            BlueprintName = "atome"
+            ReferencedContainer = "container:atome.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

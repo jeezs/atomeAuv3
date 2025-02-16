@@ -1,18 +1,19 @@
-////
-////  WebViewManager.swift
-////  common
-////
-////  Created by jeezs on 26/04/2022.
-////
+//
+//  WebViewManager.swift
+//  Common
+//
+//  Created by jeezs on 26/04/2022.
 //
 
+import Foundation
 import WebKit
 
-class WebViewManager: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
-    static let shared = WebViewManager()
-    static var webView: WKWebView?
-
-    static func setupWebView(for webView: WKWebView) {
+public class WebViewManager: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
+    public static let shared = WebViewManager()
+    public static var webView: WKWebView?
+    
+    public static func setupWebView(for webView: WKWebView) {
+    
         self.webView = webView
         webView.navigationDelegate = WebViewManager.shared
 
@@ -54,7 +55,7 @@ class WebViewManager: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
         }
     }
 
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         switch message.name {
         case "console":
             if let messageBody = message.body as? String {
@@ -104,7 +105,6 @@ class WebViewManager: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
         }
     }
     
-
     public static func sendToJS(_ message: Any, _ function: String) {
         var jsValue: String
 
@@ -135,30 +135,20 @@ class WebViewManager: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
         }
     }
 
- 
-    
-    // For tests only
-    
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("Page web chargée avec succès")
         WebViewManager.sendToJS("test", "creerDivRouge")
     }
     
-    
     private func handleUserAction(user: String, action: String) {
-   
+        // Implémentation vide
     }
     
     private func performCalculation(_ numbers: [Int]) {
         print("Calcul avec les nombres: \(numbers)")
-
     }
-
     
     public func handleError(message: String) {
         print("Erreur reçue: \(message)")
     }
-    
-
 }

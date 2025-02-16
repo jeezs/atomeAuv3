@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WebKit
+import Common
 
 struct WebViewContainer: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
